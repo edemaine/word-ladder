@@ -1,0 +1,82 @@
+export interface LadderOptions
+  swap?: boolean
+  insert?: boolean
+  delete?: boolean
+
+export class LadderSearch
+  dict: string[]
+  dictSet: Set<string>
+  options: LadderOptions
+
+  constructor(@dict: string[], @options = {})
+    @dictSet = new Set @dict
+
+  neighbors(word: string): Generator<string>
+    for each letter, i of word
+      for nextLetter of (['a'..'z'])
+        continue if letter is nextLetter
+        nextWord := `${word[0...i]}${nextLetter}${word[i+1..]}`
+        yield nextWord if @dictSet.has nextWord
+    if @options.swap
+      for each a, i of word
+        for each j of [i+1...word.length]
+          b := word[j]
+          nextWord := `${word[0...i]}${b}${word[i+1...j]}${a}`
+          yield nextWord if @dictSet.has nextWord
+    if @options.insert
+      for each i of [0..word.length]
+        for nextLetter of (['a'..'z'])
+          nextWord := `${word[0...i]}${nextLetter}${word[i..]}`
+          yield nextWord if @dictSet.has nextWord
+    if @options.delete
+      for each i of [0...word.length]
+        nextWord := `${word[0...i]}${word[i+1..]}`
+        yield nextWord if @dictSet.has nextWord
+
+  shortestLadder(start: string, goal: string)
+    solutions := []
+    frontier .= [start]
+    parent := new Map<string, string>
+    d .= 0
+
+    function buildSolution()
+      word: string .= goal
+      solution := [word]
+      until word is start
+        if prevWord := parent.get word
+          word = prevWord
+        else
+          throw new Error `missing parent for '${word}'`
+        solution.push word
+      solution.reverse()
+
+    while frontier.length
+      nextFrontier: string[] .= []
+      for each word of frontier
+        for nextWord of @neighbors word
+          continue if parent.has nextWord
+          parent.set nextWord, word
+          if nextWord is goal
+            return buildSolution()
+          nextFrontier.push nextWord
+      frontier = nextFrontier
+      d++
+    null
+
+  ladderDAG(start: string, goal: string, depth: number): Map<string, string[]>
+    frontier .= [start]
+    parent := new Map<string, string[]>
+    d .= 0
+
+    while not depth? or d < depth
+      nextFrontier: string[] .= []
+      for each word of frontier
+        for nextWord of @neighbors word
+          unless parent.has nextWord
+            parent.set nextWord, [word]
+            nextFrontier.push nextWord
+          else
+            parent.get(nextWord)!.push word
+      frontier = nextFrontier
+      d++
+    parent
