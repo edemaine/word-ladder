@@ -1,0 +1,38 @@
+{createEffect, createSignal, For} from 'solid-js'
+{type LadderOptions, LadderSearch} from './ladder.civet'
+
+export function App
+  [start, setStart] := createSignal ''
+  [goal, setGoal] := createSignal ''
+  [options, setOptions] := createSignal<LadderOptions> {}
+  ladderSearch .= new LadderSearch []
+  [ladder, setLadder] := createSignal<string[]> []
+
+  createEffect =>
+    ladderSearch.options = options()
+    setLadder ladderSearch.shortestLadder start(), goal()
+
+  <header>
+    Word Ladder Designer
+    <div .input>
+      from <input #start onInput={(e) => setStart e.target.value}> 
+      to <input #goal onInput={(e) => setGoal e.target.value}>
+      <br/>
+      dictionary <select/>
+      <br/>
+      extra words <textarea #extra>
+      <br/>
+      forbid words <textarea #forbid>
+      <br/>
+      swaps? <input #swap type="checkbox" onInput={(e) => setOptions {...options(), swap: e.target.valueAsBoolean}}>
+      <br/>
+      inserts? <input type="checkbox" onInput={(e) => setOptions {...options(), insert: e.target.valueAsBoolean}}>
+      <br/>
+      deletes? <input type="checkbox" onInput={(e) => setOptions {...options(), delete: e.target.valueAsBoolean}}>
+  <main>
+    <ul>
+      <For each={ladder()}>
+        (word) =>
+          <li>{word.toUpperCase()}
+  <footer>
+    <a href="https://github.com/edemaine/word-ladder">Source code on GitHub</a>
