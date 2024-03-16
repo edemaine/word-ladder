@@ -1,5 +1,6 @@
 {createEffect, createResource, createSignal, For} from 'solid-js'
 {type LadderDAG, type LadderOptions, LadderSearch} from './ladder.civet'
+
 wordList from './assets/wordlist.10000.txt'
 
 export function App
@@ -10,6 +11,7 @@ export function App
   [ladder, setLadder] := createSignal<string[] | null> []
   [DAG, setDAG] := createSignal<LadderDAG | null>()
   [computing, setComputing] := createSignal false
+  [dictSize, setDictSize] := createSignal<number | undefined>()
   let forbid: HTMLTextAreaElement
 
   recompute := =>
@@ -37,6 +39,7 @@ export function App
   fetch wordList
   .then (response) =>
     response.text() |> await |> ladderSearch.parseDict
+    setDictSize ladderSearch.dict!.length
     recompute()
 
   <header>
@@ -50,6 +53,9 @@ export function App
     <br/>
     dictionary <select/>
     &nbsp;
+    <Show when={dictSize()} fallback='(loading)'>
+      has {dictSize()} words
+    <br/>
     extra words: <textarea #extra onChange={(e) => setOptions {...options(), extra: new Set e.currentTarget.value.split /\s+/}}>
     &nbsp;
     forbid words: <textarea ref={forbid} #forbid onChange=updateForbid>

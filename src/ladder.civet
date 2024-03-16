@@ -18,7 +18,7 @@ export class LadderSearch
   setDict(@dict: string[])
     @dictSet = new Set @dict
   parseDict(s: string)
-    @setDict s.split /\s+/
+    @setDict s.split(/\s+/).filter (&)
   has(s: string)
     (or)
       @options.extra?.has s
