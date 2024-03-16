@@ -10,6 +10,7 @@ export function App
   [ladder, setLadder] := createSignal<string[] | null> []
   [DAG, setDAG] := createSignal<LadderDAG | null>()
   [computing, setComputing] := createSignal false
+  let forbid: HTMLTextAreaElement
 
   recompute := =>
     unless start() and goal()
@@ -27,6 +28,12 @@ export function App
       setComputing false
   createEffect recompute
 
+  updateForbid := =>
+    setOptions {...options(), forbid: new Set forbid.value.split /\s+/}
+  onForbid := (word: string) =>
+    forbid.value = `${word} ${forbid.value}`
+    updateForbid()
+
   fetch wordList
   .then (response) =>
     response.text() |> await |> ladderSearch.parseDict
@@ -38,12 +45,14 @@ export function App
     from <input #start onChange={(e) => setStart e.currentTarget.value}>
     &nbsp;
     to <input #goal onChange={(e) => setGoal e.currentTarget.value}>
+    &nbsp;
+    <button onClick=recompute>Search
     <br/>
     dictionary <select/>
     &nbsp;
     extra words: <textarea #extra onChange={(e) => setOptions {...options(), extra: new Set e.currentTarget.value.split /\s+/}}>
     &nbsp;
-    forbid words: <textarea #forbid onChange={(e) => setOptions {...options(), forbid: new Set e.currentTarget.value.split /\s+/}}>
+    forbid words: <textarea ref={forbid} #forbid onChange=updateForbid>
     <br/>
     swaps? <input #swap type="checkbox" onInput={(e) => setOptions {...options(), swap: e.currentTarget.checked}}>
     &nbsp;
@@ -66,6 +75,7 @@ export function App
           return <i>[No ladder]</i> unless l
           for each word of l
             <li>{word.toUpperCase()}
+              <button .forbid onClick={[onForbid, word]}>×
       }
   <footer>
     <a href="https://github.com/edemaine/word-ladder">Source code on GitHub</a>
