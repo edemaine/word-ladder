@@ -1,0 +1,27 @@
+{
+  "name": "word-ladder",
+  "version": "0.0.0",
+  "description": "",
+  "type": "module",
+  "scripts": {
+    "start": "vite",
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "test": "vitest",
+    "deploy": "npm run build && gh-pages -d dist"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@danielx/civet": "0.6.83",
+    "gh-pages": "^6.1.1",
+    "sass": "^1.70.0",
+    "typescript": "^5.3.3",
+    "vite": "^5.1.3",
+    "vite-plugin-solid": "^2.10.1",
+    "vitest": "^1.2.2"
+  },
+  "dependencies": {
+    "solid-js": "^1.8.15"
+  }
+}
