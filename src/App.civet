@@ -6,7 +6,10 @@ wordList from '../data/wordlist.10000.txt'
 export function App
   [start, setStart] := createSignal ''
   [goal, setGoal] := createSignal ''
-  [options, setOptions] := createSignal<LadderOptions & {depth?: number}> {}
+  [options, setOptions] := createSignal<LadderOptions & {depth?: number}>
+    swap: true
+    insert: true
+    delete: true
   ladderSearch .= new LadderSearch []
   [ladder, setLadder] := createSignal<string[] | null> []
   [DAG, setDAG] := createSignal<LadderDAG | null>()
@@ -60,11 +63,11 @@ export function App
     &nbsp;
     forbid words: <textarea ref={forbid!} #forbid onInput=updateForbid>
     <br/>
-    swaps? <input #swap type="checkbox" onInput={(e) => setOptions {...options(), swap: e.currentTarget.checked}}>
+    swaps? <input #swap type="checkbox" checked onInput={(e) => setOptions {...options(), swap: e.currentTarget.checked}}>
     &nbsp;
-    inserts? <input type="checkbox" onInput={(e) => setOptions {...options(), insert: e.currentTarget.checked}}>
+    inserts? <input type="checkbox" checked onInput={(e) => setOptions {...options(), insert: e.currentTarget.checked}}>
     &nbsp;
-    deletes? <input type="checkbox" onInput={(e) => setOptions {...options(), delete: e.currentTarget.checked}}>
+    deletes? <input type="checkbox" checked onInput={(e) => setOptions {...options(), delete: e.currentTarget.checked}}>
     <br/>
     build DAG with depth <input #depth type="number" onInput={(e) => setOptions {...options(), depth: e.currentTarget.valueAsNumber}}>
   <main>
