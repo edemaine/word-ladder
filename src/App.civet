@@ -9,6 +9,7 @@ export function App
   ladderSearch .= new LadderSearch []
   [ladder, setLadder] := createSignal<string[] | null> []
   [DAG, setDAG] := createSignal<LadderDAG | null>()
+  [computing, setComputing] := createSignal false
 
   recompute := =>
     unless start() and goal()
@@ -17,11 +18,13 @@ export function App
       return
     console.log start(), '->', goal()
     {depth} := ladderSearch.options = options()
-    if depth
-      setDAG ladderSearch.ladderDAG start(), goal(), depth
-    else
-      setLadder ladderSearch.shortestLadder start(), goal()
-    console.log 'done'
+    setComputing true
+    queueMicrotask =>
+      if depth
+        setDAG ladderSearch.ladderDAG start(), goal(), depth
+      else
+        setLadder ladderSearch.shortestLadder start(), goal()
+      setComputing false
   createEffect recompute
 
   fetch wordList
@@ -52,11 +55,12 @@ export function App
   <main>
     <ul>
       {do
+        return <i>[Computing...]</i> if computing()
         if options.depth
           for each item of DAG()
             <li>{item.toUpperCase()}
         else
-          return '[no ladder]' unless ladder()
+          return <i>[No ladder]</i> unless ladder()
           for each word of ladder()
             <li>{word.toUpperCase()}
       }
