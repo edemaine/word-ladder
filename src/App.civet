@@ -5,7 +5,7 @@ wordList from './assets/wordlist.10000.txt'
 export function App
   [start, setStart] := createSignal ''
   [goal, setGoal] := createSignal ''
-  [options, setOptions] := createSignal<LadderOptions> {}
+  [options, setOptions] := createSignal<LadderOptions & {depth?: number}> {}
   ladderSearch .= new LadderSearch []
   [ladder, setLadder] := createSignal<string[] | null> []
   [DAG, setDAG] := createSignal<LadderDAG | null>()
@@ -35,33 +35,36 @@ export function App
   <header>
     Word Ladder Designer
   <div .input>
-    from <input #start onChange={(e) => setStart e.target.value}>
+    from <input #start onChange={(e) => setStart e.currentTarget.value}>
     &nbsp;
-    to <input #goal onChange={(e) => setGoal e.target.value}>
+    to <input #goal onChange={(e) => setGoal e.currentTarget.value}>
     <br/>
     dictionary <select/>
     &nbsp;
-    extra words: <textarea #extra>
+    extra words: <textarea #extra onChange={(e) => setOptions {...options(), extra: new Set e.currentTarget.value.split /\s+/}}>
     &nbsp;
-    forbid words: <textarea #forbid>
+    forbid words: <textarea #forbid onChange={(e) => setOptions {...options(), forbid: new Set e.currentTarget.value.split /\s+/}}>
     <br/>
-    swaps? <input #swap type="checkbox" onInput={(e) => setOptions {...options(), swap: e.target.checked}}>
+    swaps? <input #swap type="checkbox" onInput={(e) => setOptions {...options(), swap: e.currentTarget.checked}}>
     &nbsp;
-    inserts? <input type="checkbox" onInput={(e) => setOptions {...options(), insert: e.target.checked}}>
+    inserts? <input type="checkbox" onInput={(e) => setOptions {...options(), insert: e.currentTarget.checked}}>
     &nbsp;
-    deletes? <input type="checkbox" onInput={(e) => setOptions {...options(), delete: e.target.checked}}>
+    deletes? <input type="checkbox" onInput={(e) => setOptions {...options(), delete: e.currentTarget.checked}}>
     <br/>
-    build DAG with depth <input #depth type="number" onInput={(e) => setOptions {...options(), depth: e.target.valueAsNumber}}>
+    build DAG with depth <input #depth type="number" onInput={(e) => setOptions {...options(), depth: e.currentTarget.valueAsNumber}}>
   <main>
     <ul>
       {do
         return <i>[Computing...]</i> if computing()
-        if options.depth
-          for each item of DAG()
+        if options().depth
+          d := DAG()
+          return <i>[No ladder]</i> unless d
+          for each item of d
             <li>{item.toUpperCase()}
         else
-          return <i>[No ladder]</i> unless ladder()
-          for each word of ladder()
+          l := ladder()
+          return <i>[No ladder]</i> unless l
+          for each word of l
             <li>{word.toUpperCase()}
       }
   <footer>

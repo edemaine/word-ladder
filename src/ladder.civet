@@ -2,6 +2,8 @@ export interface LadderOptions
   swap?: boolean
   insert?: boolean
   delete?: boolean
+  extra?: Set<string>
+  forbid?: Set<string>
 
 export interface LadderDAG
   child: Map<string, string[]>
@@ -17,29 +19,34 @@ export class LadderSearch
     @dictSet = new Set @dict
   parseDict(s: string)
     @setDict s.split /\s+/
+  has(s: string)
+    (or)
+      @options.extra?.has s
+      (and)
+        @dictSet?.has s
+        not @options.forbid?.has s
 
   neighbors(word: string): Generator<string>
-    return [] unless @dictSet
     for each letter, i of word
       for nextLetter of (['a'..'z'])
         continue if letter is nextLetter
         nextWord := `${word[0...i]}${nextLetter}${word[i+1..]}`
-        yield nextWord if @dictSet.has nextWord
+        yield nextWord if @has nextWord
     if @options.swap
       for each a, i of word
         for each j of [i+1...word.length]
           b := word[j]
           nextWord := `${word[0...i]}${b}${word[i+1...j]}${a}${word[j+1..]}`
-          yield nextWord if @dictSet.has nextWord
+          yield nextWord if @has nextWord
     if @options.insert
       for each i of [0..word.length]
         for nextLetter of (['a'..'z'])
           nextWord := `${word[0...i]}${nextLetter}${word[i..]}`
-          yield nextWord if @dictSet.has nextWord
+          yield nextWord if @has nextWord
     if @options.delete
       for each i of [0...word.length]
         nextWord := `${word[0...i]}${word[i+1..]}`
-        yield nextWord if @dictSet.has nextWord
+        yield nextWord if @has nextWord
 
   shortestLadder(start: string, goal: string): string[] | null
     solutions := []
