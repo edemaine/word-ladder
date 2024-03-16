@@ -1,7 +1,7 @@
 {createEffect, createResource, createSignal, For} from 'solid-js'
 {type LadderDAG, type LadderOptions, LadderSearch} from './ladder.civet'
 
-wordList from './assets/wordlist.10000.txt'
+wordList from '../data/wordlist.10000.txt'
 
 export function App
   [start, setStart] := createSignal ''

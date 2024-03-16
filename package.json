@@ -9,7 +9,9 @@
     "build": "vite build",
     "serve": "vite preview",
     "test": "vitest",
-    "deploy": "npm run build && gh-pages -d dist"
+    "deploy": "npm run build && gh-pages -d dist",
+    "prepare": "npm run wordlist",
+    "wordlist": "curl --create-dirs -o data/wordlist.10000.txt https://www.mit.edu/~ecprice/wordlist.10000"
   },
   "license": "MIT",
   "devDependencies": {
