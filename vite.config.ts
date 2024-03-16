@@ -21,4 +21,7 @@ export default defineConfig({
     environment: 'node',
     include: 'test/*.test.civet',
   },
+  assetsInclude: [
+    '**/*.txt'
+  ],
 })

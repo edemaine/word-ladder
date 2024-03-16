@@ -8,14 +8,18 @@ export interface LadderDAG
   parent: Map<string, string[]>
 
 export class LadderSearch
-  dict: string[]
-  dictSet: Set<string>
+  dict?: string[]
+  dictSet?: Set<string>
   options: LadderOptions
 
-  constructor(@dict: string[], @options = {})
+  constructor(@options = {})
+  setDict(@dict: string[])
     @dictSet = new Set @dict
+  parseDict(s: string)
+    @setDict s.split /\s+/
 
   neighbors(word: string): Generator<string>
+    return [] unless @dictSet
     for each letter, i of word
       for nextLetter of (['a'..'z'])
         continue if letter is nextLetter

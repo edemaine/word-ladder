@@ -1,5 +1,6 @@
-{createEffect, createSignal, For} from 'solid-js'
+{createEffect, createResource, createSignal, For} from 'solid-js'
 {type LadderDAG, type LadderOptions, LadderSearch} from './ladder.civet'
+wordList from './assets/wordlist.10000.txt'
 
 export function App
   [start, setStart] := createSignal ''
@@ -7,21 +8,33 @@ export function App
   [options, setOptions] := createSignal<LadderOptions> {}
   ladderSearch .= new LadderSearch []
   [ladder, setLadder] := createSignal<string[] | null> []
-  [DAG, setDAG] := createSignal<LadderDAG>()
+  [DAG, setDAG] := createSignal<LadderDAG | null>()
 
-  createEffect =>
+  recompute := =>
+    unless start() and goal()
+      setLadder null
+      setDAG null
+      return
+    console.log start(), '->', goal()
     {depth} := ladderSearch.options = options()
     if depth
       setDAG ladderSearch.ladderDAG start(), goal(), depth
     else
       setLadder ladderSearch.shortestLadder start(), goal()
+    console.log 'done'
+  createEffect recompute
+
+  fetch wordList
+  .then (response) =>
+    response.text() |> await |> ladderSearch.parseDict
+    recompute()
 
   <header>
     Word Ladder Designer
   <div .input>
-    from <input #start onInput={(e) => setStart e.target.value}>
+    from <input #start onChange={(e) => setStart e.target.value}>
     &nbsp;
-    to <input #goal onInput={(e) => setGoal e.target.value}>
+    to <input #goal onChange={(e) => setGoal e.target.value}>
     <br/>
     dictionary <select/>
     &nbsp;
