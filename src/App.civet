@@ -1,4 +1,4 @@
-{createEffect, createResource, createSignal, For} from 'solid-js'
+{createEffect, createResource, createSignal, For, Show} from 'solid-js'
 {type LadderDAG, type LadderOptions, LadderSearch} from './ladder.civet'
 
 wordList from '../data/wordlist.10000.txt'
@@ -45,9 +45,9 @@ export function App
   <header>
     Word Ladder Designer
   <div .input>
-    from <input #start onChange={(e) => setStart e.currentTarget.value}>
+    from <input #start onInput={(e) => setStart e.currentTarget.value}>
     &nbsp;
-    to <input #goal onChange={(e) => setGoal e.currentTarget.value}>
+    to <input #goal onInput={(e) => setGoal e.currentTarget.value}>
     &nbsp;
     <button onClick=recompute>Search
     <br/>
@@ -56,9 +56,9 @@ export function App
     <Show when={dictSize()} fallback='(loading)'>
       has {dictSize()} words
     <br/>
-    extra words: <textarea #extra onChange={(e) => setOptions {...options(), extra: new Set e.currentTarget.value.split /\s+/}}>
+    extra words: <textarea #extra onInput={(e) => setOptions {...options(), extra: new Set e.currentTarget.value.split /\s+/}}>
     &nbsp;
-    forbid words: <textarea ref={forbid} #forbid onChange=updateForbid>
+    forbid words: <textarea ref={forbid!} #forbid onInput=updateForbid>
     <br/>
     swaps? <input #swap type="checkbox" onInput={(e) => setOptions {...options(), swap: e.currentTarget.checked}}>
     &nbsp;
