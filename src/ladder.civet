@@ -29,7 +29,7 @@ export class LadderSearch
       for each a, i of word
         for each j of [i+1...word.length]
           b := word[j]
-          nextWord := `${word[0...i]}${b}${word[i+1...j]}${a}`
+          nextWord := `${word[0...i]}${b}${word[i+1...j]}${a}${word[j+1..]}`
           yield nextWord if @dictSet.has nextWord
     if @options.insert
       for each i of [0..word.length]

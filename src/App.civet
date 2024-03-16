@@ -45,11 +45,11 @@ export function App
     &nbsp;
     forbid words: <textarea #forbid>
     <br/>
-    swaps? <input #swap type="checkbox" onInput={(e) => setOptions {...options(), swap: e.target.valueAsBoolean}}>
+    swaps? <input #swap type="checkbox" onInput={(e) => setOptions {...options(), swap: e.target.checked}}>
     &nbsp;
-    inserts? <input type="checkbox" onInput={(e) => setOptions {...options(), insert: e.target.valueAsBoolean}}>
+    inserts? <input type="checkbox" onInput={(e) => setOptions {...options(), insert: e.target.checked}}>
     &nbsp;
-    deletes? <input type="checkbox" onInput={(e) => setOptions {...options(), delete: e.target.valueAsBoolean}}>
+    deletes? <input type="checkbox" onInput={(e) => setOptions {...options(), delete: e.target.checked}}>
     <br/>
     build DAG with depth <input #depth type="number" onInput={(e) => setOptions {...options(), depth: e.target.valueAsNumber}}>
   <main>
