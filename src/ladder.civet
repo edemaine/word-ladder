@@ -3,6 +3,10 @@ export interface LadderOptions
   insert?: boolean
   delete?: boolean
 
+export interface LadderDAG
+  child: Map<string, string[]>
+  parent: Map<string, string[]>
+
 export class LadderSearch
   dict: string[]
   dictSet: Set<string>
@@ -33,7 +37,7 @@ export class LadderSearch
         nextWord := `${word[0...i]}${word[i+1..]}`
         yield nextWord if @dictSet.has nextWord
 
-  shortestLadder(start: string, goal: string)
+  shortestLadder(start: string, goal: string): string[] | null
     solutions := []
     frontier .= [start]
     parent := new Map<string, string>
@@ -63,9 +67,9 @@ export class LadderSearch
       d++
     null
 
-  ladderDAG(start: string, goal: string, depth: number): Map<string, string[]>
+  ladderDAG(start: string, goal: string, depth: number): LadderDAG
     frontier .= [start]
-    parent := new Map<string, string[]>
+    parent .= new Map<string, string[]>
     d .= 0
 
     while not depth? or d < depth
@@ -79,4 +83,25 @@ export class LadderSearch
             parent.get(nextWord)!.push word
       frontier = nextFrontier
       d++
-    parent
+
+    relevant := new Map<string, string[]>
+    frontier = [goal]
+    while frontier.length
+      prevFrontier: string[] .= []
+      for each word of frontier
+        continue if relevant.has word
+        parents := parent.get word
+        relevant.set word, parents
+        prevFrontier ++= parents
+      frontier = prevFrontier
+    parent = relevant
+
+    child := new Map<string, string[]>
+    for [c, parents] of child.entries()
+      for each p of parents
+        unless child.has p
+          child.set p, [c]
+        else
+          child.get(p)!.push c
+
+    {parent, child}

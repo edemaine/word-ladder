@@ -1,16 +1,20 @@
 {createEffect, createSignal, For} from 'solid-js'
-{type LadderOptions, LadderSearch} from './ladder.civet'
+{type LadderDAG, type LadderOptions, LadderSearch} from './ladder.civet'
 
 export function App
   [start, setStart] := createSignal ''
   [goal, setGoal] := createSignal ''
   [options, setOptions] := createSignal<LadderOptions> {}
   ladderSearch .= new LadderSearch []
-  [ladder, setLadder] := createSignal<string[]> []
+  [ladder, setLadder] := createSignal<string[] | null> []
+  [DAG, setDAG] := createSignal<LadderDAG>()
 
   createEffect =>
-    ladderSearch.options = options()
-    setLadder ladderSearch.shortestLadder start(), goal()
+    {depth} := ladderSearch.options = options()
+    if depth
+      setDAG ladderSearch.ladderDAG start(), goal(), depth
+    else
+      setLadder ladderSearch.shortestLadder start(), goal()
 
   <header>
     Word Ladder Designer
@@ -30,10 +34,18 @@ export function App
     inserts? <input type="checkbox" onInput={(e) => setOptions {...options(), insert: e.target.valueAsBoolean}}>
     &nbsp;
     deletes? <input type="checkbox" onInput={(e) => setOptions {...options(), delete: e.target.valueAsBoolean}}>
+    <br/>
+    build DAG with depth <input #depth type="number" onInput={(e) => setOptions {...options(), depth: e.target.valueAsNumber}}>
   <main>
     <ul>
-      <For each={ladder()}>
-        (word) =>
-          <li>{word.toUpperCase()}
+      {do
+        if options.depth
+          for each item of DAG()
+            <li>{item.toUpperCase()}
+        else
+          return '[no ladder]' unless ladder()
+          for each word of ladder()
+            <li>{word.toUpperCase()}
+      }
   <footer>
     <a href="https://github.com/edemaine/word-ladder">Source code on GitHub</a>
