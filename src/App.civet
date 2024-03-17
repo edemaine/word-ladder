@@ -117,27 +117,44 @@ export function App
           return <i>[No ladder]</i> unless d
           word .= state.start
           g := state.goal
-          results := [
-            <li>{word.toUpperCase()}<sub>{d.dist.get word}
-          ]
+          results := []
           seen := new Set<string>
+          step .= 0
           until word is g
+            prefix := <>{word.toUpperCase()}<sub>{d.dist.get word}</sub> — </>
             seen.add word
             children .= d.child.get word
             if children
               children = children.filter (child) => not seen.has child
-              results.push <li>{
+              let nextWord: string
+              if children.length
+                nextPath := state.path[step]
+                if children.includes nextPath
+                  nextWord = nextPath
+                else
+                  nextWord = children[0]
+              else
+                results.push <li>{prefix}<i>LOOP :-(
+                break
+              thisStep := step
+              results.push <li>{prefix}{
                 for child, i of children
+                  select := (e) =>
+                    e.preventDefault()
+                    setState 'path', thisStep, child
+                    console.log thisStep, child, state.path
                   <>
                     {', ' if i}
-                    <a>{child.toUpperCase()}<sub>{d.dist.get child}
+                    {if child is nextWord
+                      <span>{child.toUpperCase()}<sub>{d.dist.get child}
+                    else
+                      <a href="#" onClick={select}>{child.toUpperCase()}<sub>{d.dist.get child}
+                    }
               }
-              if children.length
-                word = children[0]
-              else
-                results[results.length-1] = <li><i>LOOP :-(
+              word = nextWord
+              step++
             else
-              results.push <li><i>no children?!
+              results.push <li>{prefix}<i>no children?!
               break
           results
       }
