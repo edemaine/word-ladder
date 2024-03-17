@@ -79,8 +79,20 @@ export function App
         if options().depth
           d := DAG()
           return <i>[No ladder]</i> unless d
-          for each item of d
-            <li>{item.toUpperCase()}
+          word .= start()
+          g := goal()
+          results := [
+            <li>{word.toUpperCase()}
+          ]
+          until word is g
+            children := d.child.get word
+            if children
+              word = children[0]
+              results.push <li>{word.toUpperCase()}
+            else
+              results.push <li><i>no children?!
+              break
+          results
         else
           l := ladder()
           return <i>[No ladder]</i> unless l
