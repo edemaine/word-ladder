@@ -133,6 +133,13 @@ export function App
                   nextWord = nextPath
                 else
                   nextWord = children[0]
+                  nextDist .= Infinity
+                  for child of children
+                    childDist := d.dist.get child
+                    continue unless childDist?
+                    if nextDist > childDist
+                      nextWord = child
+                      nextDist = childDist
               else
                 results.push <li>{prefix}<i>LOOP :-(
                 break
@@ -142,7 +149,8 @@ export function App
                   select := (e) =>
                     e.preventDefault()
                     setState 'path', thisStep, child
-                    console.log thisStep, child, state.path
+                    for i of [thisStep+1...state.path.length]
+                      setState 'path', i, undefined
                   <>
                     {', ' if i}
                     {if child is nextWord
@@ -156,6 +164,8 @@ export function App
             else
               results.push <li>{prefix}<i>no children?!
               break
+          if word is g
+            results.push <li>{g.toUpperCase()}<sub>{d.dist.get g}
           results
       }
   <footer>
