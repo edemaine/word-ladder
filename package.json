@@ -15,7 +15,7 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@danielx/civet": "0.6.83",
+    "@danielx/civet": "0.6.84",
     "gh-pages": "^6.1.1",
     "sass": "^1.70.0",
     "typescript": "^5.3.3",

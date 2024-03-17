@@ -29,7 +29,7 @@ export class LadderSearch
 
   neighbors(word: string): Generator<string>
     for each letter, i of word
-      for nextLetter of (['a'..'z'])
+      for nextLetter of ['a'..'z']
         continue if letter is nextLetter
         nextWord := `${word[0...i]}${nextLetter}${word[i+1..]}`
         yield nextWord if @has nextWord
@@ -41,7 +41,7 @@ export class LadderSearch
           yield nextWord if @has nextWord
     if @options.insert
       for each i of [0..word.length]
-        for nextLetter of (['a'..'z'])
+        for nextLetter of ['a'..'z']
           nextWord := `${word[0...i]}${nextLetter}${word[i..]}`
           yield nextWord if @has nextWord
     if @options.delete
