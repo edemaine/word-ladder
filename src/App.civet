@@ -33,7 +33,9 @@ export function App
     for key of ['start', 'goal', 'extra', 'forbid'] as const
       setState key, params.get(key) ?? ''
     for key of ['swap', 'insert', 'delete', 'shortest'] as const
-      setState key, Boolean parseInt params.get(key) ?? '1', 10
+      n .= parseInt params.get(key) ?? '1', 10
+      n = 1 if isNaN n
+      setState key, Boolean n
   loadURL()
   window.addEventListener 'popstate', loadURL
 
