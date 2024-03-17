@@ -8,6 +8,7 @@ export interface LadderOptions
 export interface LadderDAG
   child: Map<string, string[]>
   parent: Map<string, string[]>
+  dist: Map<string, number>
 
 export class LadderSearch
   dict?: string[]
@@ -78,12 +79,12 @@ export class LadderSearch
       d++
     null
 
-  ladderDAG(start: string, goal: string, depth: number): LadderDAG
+  ladderDAG(start: string, goal: string): LadderDAG
     frontier .= [start]
     parent .= new Map<string, string[]>
-    d .= 0
+    dist .= new Map<string, number>
 
-    while d < depth
+    while frontier.length
       nextFrontier: string[] .= []
       for each word of frontier
         for nextWord of @neighbors word
@@ -91,20 +92,23 @@ export class LadderSearch
             parent.set nextWord, [word]
             nextFrontier.push nextWord
           else
-            parent.get(nextWord)!.push word
+            unless parent.get(nextWord)!.includes word
+              parent.get(nextWord)!.push word
       frontier = nextFrontier
-      d++
 
+    d .= 0
     relevant := new Map<string, string[]>
     frontier = [goal]
     while frontier.length
       prevFrontier: string[] .= []
       for each word of frontier
         continue if relevant.has word
+        dist.set word, d
         parents := parent.get(word)!
         relevant.set word, parents
         prevFrontier ++= parents
       frontier = prevFrontier
+      d++
     parent = relevant
 
     child := new Map<string, string[]>
@@ -115,4 +119,4 @@ export class LadderSearch
         else
           child.get(p)!.push c
 
-    {parent, child}
+    {parent, child, dist}

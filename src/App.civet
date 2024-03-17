@@ -8,12 +8,13 @@ export function App
   [state, setState] := createStore
     start: ''
     goal: ''
-    depth: 0
     extra: ''
     forbid: ''
     swap: true
     insert: true
     delete: true
+    shortest: true
+    path: []
   options := createMemo<LadderOptions> =>
     {
       state.{swap,insert}
@@ -31,18 +32,16 @@ export function App
     params := new URLSearchParams window.location.search
     for key of ['start', 'goal', 'extra', 'forbid'] as const
       setState key, params.get(key) ?? ''
-    for key of ['depth'] as const
-      setState key, parseInt params.get(key) ?? '0', 10
-    for key of ['swap', 'insert', 'delete'] as const
+    for key of ['swap', 'insert', 'delete', 'shortest'] as const
       setState key, Boolean parseInt params.get(key) ?? '1', 10
   loadURL()
   window.addEventListener 'popstate', loadURL
 
   createEffect =>
     search .= ''
-    for opt of ['start', 'goal', 'extra', 'forbid', 'depth'] as const
+    for opt of ['start', 'goal', 'extra', 'forbid'] as const
       search += `&${opt}=${encodeURIComponent state[opt]}` if state[opt]
-    for opt of ['swap', 'insert', 'delete'] as const
+    for opt of ['swap', 'insert', 'delete', 'shortest'] as const
       search += `&${opt}=0` unless state[opt]
     search = `?${search[1..]}` if search
     return if search is window.location.search
@@ -56,14 +55,14 @@ export function App
       setDAG null
       return
     console.log s, '->', g
-    {depth} := state
+    {shortest} := state
     ladderSearch.options = options()
     setComputing true
     queueMicrotask =>
-      if depth
-        setDAG ladderSearch.ladderDAG s, g, depth
-      else
+      if shortest
         setLadder ladderSearch.shortestLadder s, g
+      else
+        setDAG ladderSearch.ladderDAG s, g
       setComputing false
   createEffect recompute
 
@@ -101,35 +100,46 @@ export function App
     inserts? <input type="checkbox" checked=state.insert onInput={(e) => setState 'insert', e.currentTarget.checked}>
     &nbsp;
     deletes? <input type="checkbox" checked=state.delete onInput={(e) => setState 'delete', e.currentTarget.checked}>
-    <br/>
-    build DAG with depth <input #depth type="number" onInput={(e) => setState 'depth', e.currentTarget.valueAsNumber}>
+    &nbsp;
+    shortest? <input type="checkbox" checked=state.shortest onInput={(e) => setState 'shortest', e.currentTarget.checked}>
   <main>
     <ul>
       {do
         return <i>[Computing...]</i> if computing()
-        if state.depth
-          d := DAG()
-          return <i>[No ladder]</i> unless d
-          word .= state.start
-          g := state.goal
-          results := [
-            <li>{word.toUpperCase()}
-          ]
-          until word is g
-            children := d.child.get word
-            if children
-              word = children[0]
-              results.push <li>{word.toUpperCase()}
-            else
-              results.push <li><i>no children?!
-              break
-          results
-        else
+        if state.shortest
           l := ladder()
           return <i>[No ladder]</i> unless l
           for each word of l
             <li>{word.toUpperCase()}
               <button .forbid onClick={[onForbid, word]}>×
+        else
+          d := DAG()
+          return <i>[No ladder]</i> unless d
+          word .= state.start
+          g := state.goal
+          results := [
+            <li>{word.toUpperCase()}<sub>{d.dist.get word}
+          ]
+          seen := new Set<string>
+          until word is g
+            seen.add word
+            children .= d.child.get word
+            if children
+              children = children.filter (child) => not seen.has child
+              results.push <li>{
+                for child, i of children
+                  <>
+                    {', ' if i}
+                    <a>{child.toUpperCase()}<sub>{d.dist.get child}
+              }
+              if children.length
+                word = children[0]
+              else
+                results[results.length-1] = <li><i>LOOP :-(
+            else
+              results.push <li><i>no children?!
+              break
+          results
       }
   <footer>
     <a href="https://github.com/edemaine/word-ladder">Source code on GitHub</a>
