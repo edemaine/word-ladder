@@ -18,23 +18,25 @@ export function App
   let forbid: HTMLTextAreaElement
 
   recompute := =>
-    unless start() and goal()
+    s := start()
+    g := goal()
+    unless s and g
       setLadder null
       setDAG null
       return
-    console.log start(), '->', goal()
+    console.log s, '->', g
     {depth} := ladderSearch.options = options()
     setComputing true
     queueMicrotask =>
       if depth
-        setDAG ladderSearch.ladderDAG start(), goal(), depth
+        setDAG ladderSearch.ladderDAG s, g, depth
       else
-        setLadder ladderSearch.shortestLadder start(), goal()
+        setLadder ladderSearch.shortestLadder s, g
       setComputing false
   createEffect recompute
 
   updateForbid := =>
-    setOptions {...options(), forbid: new Set forbid.value.split /\s+/}
+    setOptions {...options(), forbid: new Set forbid.value.toLowerCase().split /\s+/}
   onForbid := (word: string) =>
     forbid.value = `${word} ${forbid.value}`
     updateForbid()
@@ -48,9 +50,9 @@ export function App
   <header>
     Word Ladder Designer
   <div .input>
-    from <input #start onInput={(e) => setStart e.currentTarget.value}>
+    from <input #start onInput={(e) => setStart e.currentTarget.value.toLowerCase()}>
     &nbsp;
-    to <input #goal onInput={(e) => setGoal e.currentTarget.value}>
+    to <input #goal onInput={(e) => setGoal e.currentTarget.value.toLowerCase()}>
     &nbsp;
     <button onClick=recompute>Search
     <br/>
@@ -59,7 +61,7 @@ export function App
     <Show when={dictSize()} fallback='(loading)'>
       has {dictSize()} words
     <br/>
-    extra words: <textarea #extra onInput={(e) => setOptions {...options(), extra: new Set e.currentTarget.value.split /\s+/}}>
+    extra words: <textarea #extra onInput={(e) => setOptions {...options(), extra: new Set e.currentTarget.value.toLowerCase().split /\s+/}}>
     &nbsp;
     forbid words: <textarea ref={forbid!} #forbid onInput=updateForbid>
     <br/>
