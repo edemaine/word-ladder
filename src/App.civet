@@ -15,7 +15,29 @@ export function App
   [DAG, setDAG] := createSignal<LadderDAG | null>()
   [computing, setComputing] := createSignal false
   [dictSize, setDictSize] := createSignal<number | undefined>()
-  let forbid: HTMLTextAreaElement
+  let extraRef: HTMLTextAreaElement, forbidRef: HTMLTextAreaElement
+
+  function loadURL
+    params := new URLSearchParams window.location.search
+    setStart params.get('start')! if params.has 'start'
+    setGoal params.get('goal')! if params.has 'goal'
+  loadURL()
+  window.addEventListener 'popstate', loadURL
+
+  createEffect =>
+    search .= ''
+    search += `&start=${encodeURIComponent start()}` if start()
+    search += `&goal=${encodeURIComponent goal()}` if goal()
+    o := options()
+    for opt of ['depth'] as const
+      search += `&${opt}=${encodeURIComponent o[opt]!}` if o[opt]
+    for opt of ['extra', 'forbid'] as const
+      search += `&${opt}=${encodeURIComponent Array.from(o[opt]!).join ' '}` if o[opt]?.size
+    for opt of ['swap', 'insert', 'delete'] as const
+      search += `&${opt}=0` unless o[opt]
+    search = `?${search[1..]}` if search
+    return if search is window.location.search
+    history.pushState null, 'ladder', `${window.location.pathname}${search}`
 
   recompute := =>
     s := start()
@@ -36,9 +58,9 @@ export function App
   createEffect recompute
 
   updateForbid := =>
-    setOptions {...options(), forbid: new Set forbid.value.toLowerCase().split /\s+/}
+    setOptions {...options(), forbidRef: new Set forbidRef.value.toLowerCase().split(/\s+/).filter (&)}
   onForbid := (word: string) =>
-    forbid.value = `${word} ${forbid.value}`
+    forbidRef.value = `${word} ${forbidRef.value}`
     updateForbid()
 
   fetch wordList
@@ -50,20 +72,22 @@ export function App
   <header>
     Word Ladder Designer
   <div .input>
-    from <input #start onInput={(e) => setStart e.currentTarget.value.toLowerCase()}>
+    from <input #start value={start()} onInput={(e) => setStart e.currentTarget.value.toLowerCase()}>
     &nbsp;
-    to <input #goal onInput={(e) => setGoal e.currentTarget.value.toLowerCase()}>
+    to <input #goal value={goal()} onInput={(e) => setGoal e.currentTarget.value.toLowerCase()}>
+    <!--
     &nbsp;
     <button onClick=recompute>Search
+    -->
     <br/>
     dictionary <select/>
     &nbsp;
     <Show when={dictSize()} fallback='(loading)'>
       has {dictSize()} words
     <br/>
-    extra words: <textarea #extra onInput={(e) => setOptions {...options(), extra: new Set e.currentTarget.value.toLowerCase().split /\s+/}}>
+    extra words: <textarea ref={extraRef!} #extra onInput={(e) => setOptions {...options(), extra: new Set e.currentTarget.value.toLowerCase().split(/\s+/).filter (&)}}>
     &nbsp;
-    forbid words: <textarea ref={forbid!} #forbid onInput=updateForbid>
+    forbid words: <textarea ref={forbidRef!} #forbid onInput=updateForbid>
     <br/>
     swaps? <input #swap type="checkbox" checked onInput={(e) => setOptions {...options(), swap: e.currentTarget.checked}}>
     &nbsp;
