@@ -4,17 +4,21 @@
 
 wordList from '../data/wordlist.10000.txt'
 
+defaultState :=
+  start: ''
+  goal: ''
+  extra: ''
+  forbid: ''
+  swap: true
+  insert: true
+  delete: true
+  shortest: true
+
 export function App
-  [state, setState] := createStore
-    start: ''
-    goal: ''
-    extra: ''
-    forbid: ''
-    swap: true
-    insert: true
-    delete: true
-    shortest: true
+  [state, setState] := createStore {
+    ...defaultState
     path: []
+  }
   options := createMemo<LadderOptions> =>
     {
       state.{swap,insert}
@@ -31,20 +35,27 @@ export function App
   function loadURL
     params := new URLSearchParams window.location.search
     for key of ['start', 'goal', 'extra', 'forbid'] as const
-      setState key, params.get(key) ?? ''
+      setState key, params.get(key) ?? defaultState[key]
     for key of ['swap', 'insert', 'delete', 'shortest'] as const
-      n .= parseInt params.get(key) ?? '1', 10
-      n = 1 if isNaN n
-      setState key, Boolean n
+      set .= false
+      if params.has key
+        n .= parseInt params.get(key)!, 10
+        unless isNaN n
+          setState key, Boolean n
+          set = true
+      unless set
+        setState key, defaultState[key]
   loadURL()
   window.addEventListener 'popstate', loadURL
 
   createEffect =>
     search .= ''
     for opt of ['start', 'goal', 'extra', 'forbid'] as const
-      search += `&${opt}=${encodeURIComponent state[opt]}` if state[opt]
+      unless state[opt] is defaultState[opt]
+        search += `&${opt}=${encodeURIComponent state[opt]}`
     for opt of ['swap', 'insert', 'delete', 'shortest'] as const
-      search += `&${opt}=0` unless state[opt]
+      unless state[opt] is defaultState[opt]
+        search += `&${opt}=${Number state[opt]}`
     search = `?${search[1..]}` if search
     return if search is window.location.search
     history.pushState null, 'ladder', `${window.location.pathname}${search}`
@@ -97,7 +108,7 @@ export function App
     <br/>
     dictionary <select/>
     &nbsp;
-    <Show when={dictSize()} fallback='(loading)'>
+    <Show when={dictSize()} fallback=<b><i>(still loading)</i></b>>
       has {dictSize()} words
     <br/>
     extra words: <textarea #extra value=state.extra onInput={(e) => setState 'extra', e.currentTarget.value.toLowerCase()}>
