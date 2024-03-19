@@ -68,6 +68,11 @@ export function App
       setComputing false
   createEffect recompute
 
+  swapStartGoal := =>
+    {start, goal} := state
+    setState 'start', goal
+    setState 'goal', start
+
   onForbid := (word: string) =>
     setState 'forbid', `${word} ${state.forbid}`
 
@@ -83,6 +88,8 @@ export function App
     from <input #start value=state.start onInput={(e) => setState 'start', e.currentTarget.value.toLowerCase()}>
     &nbsp;
     to <input #goal value=state.goal onInput={(e) => setState 'goal', e.currentTarget.value.toLowerCase()}>
+    &nbsp;
+    <button onClick=swapStartGoal>↔
     <!--
     &nbsp;
     <button onClick=recompute>Search
