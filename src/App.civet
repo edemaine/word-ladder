@@ -76,6 +76,7 @@ export function App
     {shortest} := state
     ladderSearch.options = options()
     setComputing true
+    setLadderText ''
     queueMicrotask =>
       if shortest
         setLadder ladderSearch.shortestLadder s, g
