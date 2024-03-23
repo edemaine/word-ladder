@@ -87,6 +87,23 @@ export function App
   onForbid := (word: string) =>
     setState 'forbid', `${word} ${state.forbid}`
 
+  randomize := :void =>
+    d := DAG()
+    return unless d
+    word .= state.start
+    g := state.goal
+    seen := new Set<string>
+    step .= 0
+    until word is g
+      seen.add word
+      children .= d.child.get word
+      break unless children
+      children = children.filter (child) => not seen.has child
+      break unless children.length
+      word = children[Math.floor Math.random() * children.#]
+      setState 'path', step, word
+      step++
+
   fetch wordList
   .then (response) =>
     response.text() |> await |> ladderSearch.parseDict
@@ -126,6 +143,7 @@ export function App
     deletes? <input type="checkbox" checked=state.delete onInput={(e) => setState 'delete', e.currentTarget.checked}>
     &nbsp;
     shortest? <input type="checkbox" checked=state.shortest onInput={(e) => setState 'shortest', e.currentTarget.checked}>
+    <button .randomize disabled=state.shortest onClick=randomize title="Warning: Can be slow, if it finds a long path">Randomize
   <main>
     <ol>
       {do
