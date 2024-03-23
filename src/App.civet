@@ -135,7 +135,7 @@ export function App
           return <i>[No ladder]</i> unless l
           for each word of l
             <li>{word.toUpperCase()}
-              <button .forbid onClick={[onForbid, word]}>×
+              <button .forbid onClick={[onForbid, word]}>
         else
           d := DAG()
           return <i>[No ladder]</i> unless d
