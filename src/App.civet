@@ -17,7 +17,7 @@ defaultState :=
 export function App
   [state, setState] := createStore {
     ...defaultState
-    path: []
+    path: [] as string[]
   }
   options := createMemo<LadderOptions> =>
     {
@@ -46,6 +46,8 @@ export function App
           set = true
       unless set
         setState key, defaultState[key]
+    if params.has 'path'
+      setState 'path', params.get('path')!.split ','
   loadURL()
   window.addEventListener 'popstate', loadURL
 
@@ -57,6 +59,8 @@ export function App
     for opt of ['swap', 'insert', 'delete', 'shortest'] as const
       unless state[opt] is defaultState[opt]
         search += `&${opt}=${Number state[opt]}`
+    path := state.path.join(',').replace /,+$/, ''
+    search += `&path=${path}` if path
     search = `?${search[1..]}` if search
     return if search is window.location.search
     history.pushState null, 'ladder', `${window.location.pathname}${search}`
