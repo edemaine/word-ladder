@@ -31,6 +31,7 @@ export function App
   [DAG, setDAG] := createSignal<LadderDAG | null>()
   [computing, setComputing] := createSignal false
   [dictSet, setDictSet] := createSignal<Set<string> | undefined>()
+  [ladderText, setLadderText] := createSignal ''
 
   function loadURL
     params := new URLSearchParams window.location.search
@@ -162,9 +163,12 @@ export function App
           results := []
           seen := new Set<string>
           step .= 0
+          text .= ''
           until word is g
+            upper := word.toUpperCase()
+            text += `${upper}\n`
             prefix := <>
-              {word.toUpperCase()}<sub>{d.dist.get word}</sub>
+              {upper}<sub>{d.dist.get word}</sub>
               <button .forbid onClick={[onForbid, word]}>
               {' — '}
             seen.add word
@@ -210,8 +214,14 @@ export function App
               results.push <li>{prefix}<i>no children?!
               break
           if word is g
-            results.push <li>{g.toUpperCase()}<sub>{d.dist.get g}
+            upper := g.toUpperCase()
+            text += `${upper}\n`
+            results.push <li>{upper.toUpperCase()}<sub>{d.dist.get g}
+          setLadderText text
           results
       }
+    <pre #ladderText innerText=ladderText() onClick={(e) =>
+      window.getSelection()?.selectAllChildren e.currentTarget
+    }>
   <footer>
     <a href="https://github.com/edemaine/word-ladder">Source code on GitHub</a>
