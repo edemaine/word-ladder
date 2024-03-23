@@ -145,7 +145,10 @@ export function App
           seen := new Set<string>
           step .= 0
           until word is g
-            prefix := <>{word.toUpperCase()}<sub>{d.dist.get word}</sub> — </>
+            prefix := <>
+              {word.toUpperCase()}<sub>{d.dist.get word}</sub>
+              <button .forbid onClick={[onForbid, word]}>
+              {' — '}
             seen.add word
             children .= d.child.get word
             if children
