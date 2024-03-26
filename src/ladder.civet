@@ -96,20 +96,23 @@ export class LadderSearch
               parent.get(nextWord)!.push word
       frontier = nextFrontier
 
-    d .= 0
-    relevant := new Map<string, string[]>
-    frontier = [goal]
-    while frontier.length
-      prevFrontier: string[] .= []
-      for each word of frontier
-        continue if relevant.has word
-        dist.set word, d
-        parents := parent.get(word)!
-        relevant.set word, parents
-        prevFrontier ++= parents
-      frontier = prevFrontier
-      d++
-    parent = relevant
+    // Filter to reachable goals
+    if parent.has goal
+      d .= 0
+      relevant := new Map<string, string[]>
+      frontier = [goal]
+      while frontier.length
+        prevFrontier: string[] .= []
+        for each word of frontier
+          continue if relevant.has word
+          dist.set word, d
+          parents := parent.get(word)!
+          console.log word, parents
+          relevant.set word, parents
+          prevFrontier ++= parents
+        frontier = prevFrontier
+        d++
+      parent = relevant
 
     child := new Map<string, string[]>
     for [c, parents] of parent.entries()
