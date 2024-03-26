@@ -161,7 +161,14 @@ export function App
     &nbsp;
     shortest? <input type="checkbox" checked=state.shortest onInput={(e) => setState 'shortest', e.currentTarget.checked}>
     <button .randomize disabled=state.shortest onClick=randomize title="Warning: Can be slow, if it finds a long path">Randomize
+    <hr>
   <main>
+    <Show when={not computing() and not state.shortest and DAG()}><p>
+      {if state.goal and DAG()?.dist?.size
+        <i>{DAG()?.child.size} words along the way from {state.start.toUpperCase()} to {state.goal.toUpperCase()}
+      else
+        <i>{DAG()?.child.size} words reachable from {state.start.toUpperCase()}
+      }
     <table>
       {do
         return <i>[Computing...]</i> if computing()
