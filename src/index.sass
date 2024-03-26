@@ -23,9 +23,15 @@ footer
   flex-direction: row
   justify-content: space-between
 
+td
+  vertical-align: top
+tr > td:first-child
+  text-align: right
+
 button.forbid
   cursor: pointer
-  margin-left: 0.5em
+  margin-left: 0.25em
+  margin-right: 0.5em
   &::before
     content: '×'
 

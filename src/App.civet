@@ -152,7 +152,7 @@ export function App
     shortest? <input type="checkbox" checked=state.shortest onInput={(e) => setState 'shortest', e.currentTarget.checked}>
     <button .randomize disabled=state.shortest onClick=randomize title="Warning: Can be slow, if it finds a long path">Randomize
   <main>
-    <ol>
+    <table>
       {do
         return <i>[Computing...]</i> if computing()
         if state.shortest
@@ -160,11 +160,13 @@ export function App
           return <i>[No ladder]</i> unless l
           text .= ''
           results :=
-            for each word of l
+            for each word, step of l
               upper := word.toUpperCase()
               text += `${upper}\n`
-              <li>{upper}
-                <button .forbid onClick={[onForbid, word]}>
+              <tr>
+                <td>{step+1}.
+                <td>{upper}
+                <td><button .forbid onClick={[onForbid, word]}>
           setLadderText text
           results
         else
@@ -180,9 +182,9 @@ export function App
             upper := word.toUpperCase()
             text += `${upper}\n`
             prefix := <>
-              {upper}<sub>{d.dist.get word}</sub>
-              <button .forbid onClick={[onForbid, word]}>
-              {' — '}
+              <td>{step+1}.
+              <td>{upper}<sub>{d.dist.get word}</sub>
+              <td><button .forbid onClick={[onForbid, word]}>
             seen.add word
             children .= d.child.get word
             if children
@@ -202,10 +204,10 @@ export function App
                       nextWord = child
                       nextDist = childDist
               else
-                results.push <li>{prefix}<i>LOOP :-(
+                results.push <tr>{prefix}<td><i>LOOP :-(
                 break
               thisStep := step
-              results.push <li>{prefix}{
+              results.push <tr>{prefix}<td>{
                 for child, i of children
                   select := (e) =>
                     e.preventDefault()
@@ -223,12 +225,14 @@ export function App
               word = nextWord
               step++
             else
-              results.push <li>{prefix}<i>no children?!
+              results.push <tr>{prefix}<td><i>no children?!
               break
           if word is g
             upper := g.toUpperCase()
             text += `${upper}\n`
-            results.push <li>{upper.toUpperCase()}<sub>{d.dist.get g}
+            results.push <tr>
+              <td>{step+1}
+              <td>{upper.toUpperCase()}<sub>{d.dist.get g}
           setLadderText text
           results
       }
