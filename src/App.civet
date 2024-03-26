@@ -23,7 +23,9 @@ export function App
     {
       state.{swap,insert}
       state.delete
-      extra: new Set state.extra.toLowerCase().split(/\s+/).filter (&)
+      extra: new Set
+        state.extra.toLowerCase().split(/\s+/).filter((&))
+        ++ [state.start, state.goal]
       forbid: new Set state.forbid.toLowerCase().split(/\s+/).filter (&)
     }
   ladderSearch .= new LadderSearch []
@@ -68,7 +70,7 @@ export function App
   recompute := =>
     s := state.start
     g := state.goal
-    unless s and g
+    unless s
       setLadder null
       setLadderText null
       setDAG null
