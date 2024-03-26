@@ -70,6 +70,7 @@ export function App
     g := state.goal
     unless s and g
       setLadder null
+      setLadderText null
       setDAG null
       return
     console.log s, '->', g
@@ -157,9 +158,15 @@ export function App
         if state.shortest
           l := ladder()
           return <i>[No ladder]</i> unless l
-          for each word of l
-            <li>{word.toUpperCase()}
-              <button .forbid onClick={[onForbid, word]}>
+          text .= ''
+          results :=
+            for each word of l
+              upper := word.toUpperCase()
+              text += `${upper}\n`
+              <li>{upper}
+                <button .forbid onClick={[onForbid, word]}>
+          setLadderText text
+          results
         else
           d := DAG()
           return <i>[No ladder]</i> unless d
@@ -225,8 +232,9 @@ export function App
           setLadderText text
           results
       }
-    <pre #ladderText innerText=ladderText() onClick={(e) =>
-      window.getSelection()?.selectAllChildren e.currentTarget
-    }>
+    <Show when=ladderText()>
+      <pre #ladderText innerText=ladderText() onClick={(e) =>
+        window.getSelection()?.selectAllChildren e.currentTarget
+      }>
   <footer>
     <a href="https://github.com/edemaine/word-ladder">Source code on GitHub</a>
