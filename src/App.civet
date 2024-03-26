@@ -113,6 +113,13 @@ export function App
       setState 'path', step, word
       step++
 
+  isInvalid := (word) =>
+    ds := dictSet()
+    return unless ds?
+    return false if ds.has word
+    return false if new RegExp(`(^|\\s)${word}($|\\s)`).test state.extra
+    true
+
   fetch wordList
   .then (response) =>
     response.text() |> await |> ladderSearch.parseDict
@@ -123,11 +130,11 @@ export function App
     Word Ladder Designer
   <div .input>
     from <input #start value=state.start
-    classList={invalid: dictSet()? and not dictSet()!.has state.start}
+    classList={invalid: isInvalid state.start}
     onInput={(e) => setState 'start', e.currentTarget.value.toLowerCase()}>
     &nbsp;
     to <input #goal value=state.goal
-    classList={invalid: dictSet()? and not dictSet()!.has state.goal}
+    classList={invalid: isInvalid state.goal}
     onInput={(e) => setState 'goal', e.currentTarget.value.toLowerCase()}>
     &nbsp;
     <button onClick=swapStartGoal>↔
