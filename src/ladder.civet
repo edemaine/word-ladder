@@ -55,8 +55,7 @@ export class LadderSearch
     parent := new Map<string, string>
     d .= 0
 
-    function buildSolution()
-      word: string .= goal
+    function buildSolution(word: string)
       solution := [word]
       until word is start
         if prevWord := parent.get word
@@ -66,6 +65,7 @@ export class LadderSearch
         solution.push word
       solution.reverse()
 
+    let lastFrontier: string[] | undefined
     while frontier.length
       nextFrontier: string[] .= []
       for each word of frontier
@@ -73,10 +73,16 @@ export class LadderSearch
           continue if parent.has nextWord
           parent.set nextWord, word
           if nextWord is goal
-            return buildSolution()
+            return buildSolution goal
           nextFrontier.push nextWord
+      lastFrontier = frontier
       frontier = nextFrontier
       d++
+
+    // No ladder found
+    if not goal and lastFrontier?.length
+      return buildSolution lastFrontier[0]
+
     null
 
   ladderDAG(start: string, goal: string): LadderDAG
@@ -107,7 +113,6 @@ export class LadderSearch
           continue if relevant.has word
           dist.set word, d
           parents := parent.get(word)!
-          console.log word, parents
           relevant.set word, parents
           prevFrontier ++= parents
         frontier = prevFrontier
