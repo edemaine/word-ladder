@@ -129,37 +129,49 @@ export function App
 
   <header>
     Word Ladder Designer
-  <div .input>
+  <.input>
     from <input #start value=state.start
     classList={invalid: isInvalid state.start}
     onInput={(e) => setState 'start', e.currentTarget.value.toLowerCase()}>
     &nbsp;
+    <button onClick=swapStartGoal>↔
+    &nbsp;
     to <input #goal value=state.goal
     classList={invalid: isInvalid state.goal}
     onInput={(e) => setState 'goal', e.currentTarget.value.toLowerCase()}>
-    &nbsp;
-    <button onClick=swapStartGoal>↔
     <!--
     &nbsp;
     <button onClick=recompute>Search
     -->
-    <br/>
-    dictionary <select/>
+  <.input>
+    dictionary <select>
+      <option>ecprice-10000
     &nbsp;
     <Show when={dictSet()?.size} fallback=<b><i>(still loading)</i></b>>
       has {dictSet()?.size} words
-    <br/>
+  <.input>
     extra words: <textarea #extra value=state.extra onInput={(e) => setState 'extra', e.currentTarget.value.toLowerCase()}>
     &nbsp;
     forbid words: <textarea #forbid value=state.forbid onInput={(e) => setState 'forbid', e.currentTarget.value.toLowerCase()}>
-    <br/>
-    swaps? <input #swap type="checkbox" checked=state.swap onInput={(e) => setState 'swap', e.currentTarget.checked}>
-    &nbsp;
-    inserts? <input type="checkbox" checked=state.insert onInput={(e) => setState 'insert', e.currentTarget.checked}>
-    &nbsp;
-    deletes? <input type="checkbox" checked=state.delete onInput={(e) => setState 'delete', e.currentTarget.checked}>
-    &nbsp;
-    shortest? <input type="checkbox" checked=state.shortest onInput={(e) => setState 'shortest', e.currentTarget.checked}>
+  <.input>
+    {'Operations: '}
+    <label>
+      <input #swap type="checkbox" checked=state.swap onInput={(e) => setState 'swap', e.currentTarget.checked}>
+      {' swaps '}
+    <label>
+      <input type="checkbox" checked=state.insert onInput={(e) => setState 'insert', e.currentTarget.checked}>
+      {' inserts '}
+    <label>
+      <input type="checkbox" checked=state.delete onInput={(e) => setState 'delete', e.currentTarget.checked}>
+      {' deletes '}
+  <.input>
+    {'Find '}
+    <label>
+      <input type="radio" name="mode" value="shortest" checked=state.shortest onInput={(e) => setState 'shortest', e.currentTarget.checked}>
+      {'shortest or '}
+    <label>
+      <input type="radio" name="mode" value="all" checked=!state.shortest onInput={(e) => setState 'shortest', not e.currentTarget.checked}>
+      {'all ladders'}
     <button .randomize disabled=state.shortest onClick=randomize title="Warning: Can be slow, if it finds a long path">Randomize
     <hr>
   <main>
@@ -257,5 +269,7 @@ export function App
       <pre #ladderText innerText=ladderText() onClick={(e) =>
         window.getSelection()?.selectAllChildren e.currentTarget
       }>
+  <hr>
   <footer>
+    <span>by <a href="https://erikdemaine.org">Erik Demaine</a> and <a href="https://martindemaine.org">Martin Demaine</a>, 2024
     <a href="https://github.com/edemaine/word-ladder">Source code on GitHub</a>
