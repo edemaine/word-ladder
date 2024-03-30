@@ -134,11 +134,11 @@ export function App
     classList={invalid: isInvalid state.start}
     onInput={(e) => setState 'start', e.currentTarget.value.toLowerCase()}>
     &nbsp;
-    <button onClick=swapStartGoal>↔
-    &nbsp;
     to <input #goal value=state.goal
     classList={invalid: isInvalid state.goal}
     onInput={(e) => setState 'goal', e.currentTarget.value.toLowerCase()}>
+    &nbsp;
+    <button onClick=swapStartGoal>↔
     <!--
     &nbsp;
     <button onClick=recompute>Search
@@ -260,7 +260,7 @@ export function App
             upper := g.toUpperCase()
             text += `${upper}\n`
             results.push <tr>
-              <td>{step+1}
+              <td>{step+1}.
               <td>{upper.toUpperCase()}<sub>{d.dist.get g}
           setLadderText text
           results
