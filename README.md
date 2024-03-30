@@ -8,6 +8,8 @@ Lewis Carroll invented word ladders as a kind of puzzle game;
 his 1879 *Vanity Fair* article proposed turning HEAD into TAIL with four words
 in between: HEAD → HEAL → TEAL → TELL → TALL → TAIL.
 
+## Features
+
 This tool lets you design your own word ladders,
 with a variety of different rules and constraints:
 
@@ -36,3 +38,5 @@ with a variety of different rules and constraints:
     (if there is a goal), so you can tell which choices get you closer
     vs. farther away.
     This can be helpful for designing a word ladder of a desired length.
+
+[Try it out now!](https://edemaine.github.io/word-ladder/)
