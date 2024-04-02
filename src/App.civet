@@ -266,6 +266,11 @@ export function App
           results
       }
     <Show when=ladderText()>
+      <hr>
+      <div>
+        Copy/pastable ladder:
+        <.link>
+          <a target="_blank" href={`https://erikdemaine.org/fonts/strip/?text=${encodeURIComponent ladderText()}`}>Fold from strip
       <pre #ladderText innerText=ladderText() onClick={(e) =>
         window.getSelection()?.selectAllChildren e.currentTarget
       }>
