@@ -40,3 +40,13 @@ with a variety of different rules and constraints:
     This can be helpful for designing a word ladder of a desired length.
 
 [Try it out now!](https://edemaine.github.io/word-ladder/)
+
+## Application to Sculpture
+
+[![](https://erikdemaine.org/curved/Brush/thumbs/brush4_small.jpg)](https://erikdemaine.org/curved/Brush/)
+
+This software was originally created to design word ladders
+for a folded-paper and blown-glass sculpture called
+[Brush With Words](https://erikdemaine.org/curved/Brush/).
+For this purpose, it includes a link for rendering the current word ladder
+in our [strip folding font](https://erikdemaine.org/fonts/strip/).
