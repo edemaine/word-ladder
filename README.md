@@ -30,7 +30,7 @@ with a variety of different rules and constraints:
     With a goal, this finds the fastest way between two words.
     Without a goal, this finds a longest shortest ladder
     (the radius of the source in the graph).
-  * You can search among **all* ladders.
+  * You can search among **all** ladders.
     In this mode, you see all the options available at each step,
     and you can choose which word to go to next.
     As a starting point, the ladder starts with the shortest one.
