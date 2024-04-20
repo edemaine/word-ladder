@@ -19,7 +19,7 @@ export class LadderSearch
   setDict(@dict: string[])
     @dictSet = new Set @dict
   parseDict(s: string)
-    @setDict s.split(/\s+/).filter (&)
+    @setDict s.split(/\s+/).filter &
   has(s: string)
     (or)
       @options.extra?.has s
@@ -50,7 +50,6 @@ export class LadderSearch
         yield nextWord if @has nextWord
 
   shortestLadder(start: string, goal: string): string[] | null
-    solutions := []
     frontier .= [start]
     parent := new Map<string, string>
     d .= 0

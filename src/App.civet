@@ -20,14 +20,14 @@ export function App
     path: [] as string[]
   }
   options := createMemo<LadderOptions> =>
-    extra := state.extra.toLowerCase().split(/\s+/).filter (&)
+    extra := state.extra.toLowerCase().split(/\s+/).filter &
     extra.push state.start
     extra.push state.goal if state.goal
     return {
       state.{swap,insert}
       state.delete
       extra: new Set extra
-      forbid: new Set state.forbid.toLowerCase().split(/\s+/).filter (&)
+      forbid: new Set state.forbid.toLowerCase().split(/\s+/).filter &
     }
   ladderSearch .= new LadderSearch []
   [ladder, setLadder] := createSignal<string[] | null> []
@@ -43,7 +43,7 @@ export function App
     for key of ['swap', 'insert', 'delete', 'shortest'] as const
       set .= false
       if params.has key
-        n .= parseInt params.get(key)!, 10
+        n := Number params.get(key)!
         unless isNaN n
           setState key, Boolean n
           set = true
