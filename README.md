@@ -13,9 +13,11 @@ in between: HEAD → HEAL → TEAL → TELL → TALL → TAIL.
 This tool lets you design your own word ladders,
 with a variety of different rules and constraints:
 
-* **Dictionary**: Currently the only full dictionary available is a
-  [10,000 English word list by Eric Price](https://www.mit.edu/~ecprice/wordlist.10000).
-  But you can add your own **extra words**,
+* **Dictionary**: Two dictionaries of English words are available:
+  1. [10,000 English word list by Eric Price](https://www.mit.edu/~ecprice/wordlist.10000)
+  2. [370,000 English word list by dwyl](https://github.com/dwyl/english-words)
+     — *Warning: This currently makes the software run slow.*
+* You can also add your own **extra words**,
   or **forbid words** from the dictionary that you don't like.
   Click an × button to remove a word in the current ladder.
 * **Operations**: In addition to allowing single letters replacements,

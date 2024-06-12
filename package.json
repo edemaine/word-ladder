@@ -12,7 +12,7 @@
     "lint": "eslint **/*.civet",
     "deploy": "npm run build && gh-pages -d dist",
     "prepare": "npm run wordlist",
-    "wordlist": "curl --create-dirs -o data/wordlist.10000.txt https://www.mit.edu/~ecprice/wordlist.10000"
+    "wordlist": "curl --create-dirs -o data/wordlist.ecprice.txt https://www.mit.edu/~ecprice/wordlist.10000 && curl --create-dirs -o data/wordlist.dwyl.txt https://cdn.jsdelivr.net/gh/dwyl/english-words/words_alpha.txt"
   },
   "license": "MIT",
   "devDependencies": {
