@@ -126,7 +126,7 @@ export function App
     return false if new RegExp(`(^|\\s)${word}($|\\s)`).test state.extra
     true
 
-  [wordList, setWordList] := createSignal<WordList> '10000'
+  [wordList, setWordList] := createSignal<WordList> 'ecprice'
 
   createEffect =>
     setDictSet undefined
