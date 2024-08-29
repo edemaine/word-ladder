@@ -1,4 +1,4 @@
-{createEffect, createMemo, createResource, createSignal, For, Show} from 'solid-js'
+{createEffect, createMemo, createSignal, Show} from 'solid-js'
 {createStore} from 'solid-js/store'
 {type LadderDAG, type LadderOptions, LadderSearch} from './ladder.civet'
 
@@ -34,7 +34,7 @@ export function App
       extra: new Set extra
       forbid: new Set state.forbid.toLowerCase().split(/\s+/).filter &
     }
-  ladderSearch .= new LadderSearch []
+  ladderSearch := new LadderSearch []
   [ladder, setLadder] := createSignal<string[] | null> []
   [DAG, setDAG] := createSignal<LadderDAG | null>()
   [computing, setComputing] := createSignal false

@@ -66,7 +66,7 @@ export class LadderSearch
 
     let lastFrontier: string[] | undefined
     while frontier.length
-      nextFrontier: string[] .= []
+      nextFrontier: string[] := []
       for each word of frontier
         for nextWord of @neighbors word
           continue if parent.has nextWord
@@ -87,10 +87,10 @@ export class LadderSearch
   ladderDAG(start: string, goal: string): LadderDAG
     frontier .= [start]
     parent .= new Map<string, string[]>
-    dist .= new Map<string, number>
+    dist := new Map<string, number>
 
     while frontier.length
-      nextFrontier: string[] .= []
+      nextFrontier: string[] := []
       for each word of frontier
         for nextWord of @neighbors word
           unless parent.has nextWord
@@ -107,7 +107,7 @@ export class LadderSearch
       relevant := new Map<string, string[]>
       frontier = [goal]
       while frontier.length
-        prevFrontier: string[] .= []
+        prevFrontier: string[] := []
         for each word of frontier
           continue if relevant.has word
           dist.set word, d
