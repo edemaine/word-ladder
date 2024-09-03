@@ -52,3 +52,44 @@ for a folded-paper and blown-glass sculpture called
 [Brush With Words](https://erikdemaine.org/curved/Brush/).
 For this purpose, it includes a link for rendering the current word ladder
 in our [strip folding font](https://erikdemaine.org/fonts/strip/).
+
+## Installation
+
+1. **Install Node.js and npm**
+
+   - Download and install Node.js from the [official website](https://nodejs.org/). This will also install npm (Node Package Manager) by default.
+
+   - Verify the installation by running the following commands in your terminal:
+     ```bash
+     node -v
+     npm -v
+     ```
+
+2. **Install `pnpm` Package Manager**
+
+   - Install `pnpm`, a package manager:
+     ```bash
+     npm install -g pnpm
+     ```
+
+   - Install the project dependencies using `pnpm`:
+     ```bash
+     pnpm install
+     ```
+
+3. **Prepare the Data**
+
+   - Run the following command to prepare the necessary data for the application:
+     ```bash
+     pnpm run prepare
+     ```
+
+4. **Start the Development Server**
+
+   - Build the project and start the development server:
+     ```bash
+     pnpm run build
+     pnpm run dev
+     ```
+
+This will start the development server, and you can access the application in your browser at `http://localhost:3000`.
