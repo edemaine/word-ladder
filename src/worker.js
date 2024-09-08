@@ -1,4 +1,4 @@
-import LadderSearch from './ladder.civet';
+import LadderSearch from './ladder.js';
 // import { LadderSearch } from './ladder.js';
 
 onmessage = function(e) {
