@@ -7,7 +7,8 @@ export default defineConfig({
   plugins: [
     civetPlugin({
       ts: "preserve",
-      //typecheck: true,
+      // ensure civet files are transpiled to .js
+      include: /\.civet$/,
     }),
     solidPlugin(),
   ],
@@ -24,4 +25,5 @@ export default defineConfig({
   assetsInclude: [
     '**/*.txt'
   ],
+  
 })
