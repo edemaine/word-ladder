@@ -6,7 +6,8 @@
   "scripts": {
     "start": "vite",
     "dev": "vite",
-    "build": "vite build",
+   
+    "build": "DEBUG=vite:* vite build",
     "serve": "vite preview",
     "test": "vitest",
     "lint": "eslint **/*.civet",
