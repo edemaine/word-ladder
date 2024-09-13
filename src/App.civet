@@ -78,14 +78,12 @@ export function App
 
   ladderWorker := new Worker(new URL('./worker.js', import.meta.url), { type: 'module' })
 
-  console.log('Worker initialized:', ladderWorker)
-
   // Optional: Add an error event listener to catch any issues with the worker
   ladderWorker.onerror = (error) -> 
-    console.error('Worker encountered an error:', error)
+    console.error 'Worker encountered an error:', error
 
   ladderWorker.onmessageerror = (error) ->
-    console.error('Worker message error:', error)
+    console.error 'Worker message error:', error
 
   recompute := =>
     s := state.start
@@ -102,16 +100,6 @@ export function App
     ladderSearch.options = options()
     setComputing true
     setLadderText ''
-    console.log("recompute start dictSet:", LadderSearch.dictSet)
-
-    
-    // const message = {
-    //   start: state.start,
-    //   goal: state.goal,
-    //   shortest: state.shortest,
-    //   options: ladderSearch.options,
-    //   dictSet: ladderSearch.dictSet ? Array.from(ladderSearch.dictSet) : []  // Fallback to empty array if undefined
-    // };
 
     message := 
       start: state.start
@@ -120,26 +108,16 @@ export function App
       options: ladderSearch.options
       dictSet: ladderSearch.dictSet
 
-    console.log("recompoute dictset after setting message: ", message.dictSet)
-    console.log('Sending message to worker:', message)
-    console.log("worker, start, goal, shortest: ", ladderWorker, state.start, state.goal)
     ladderWorker.postMessage message
 
     ladderWorker.onmessage = (e) ->
       const { type, data } = e.data
-      console.log('Received message from worker:', { type, data })
       if shortest
         setLadder data
       else
         setDAG data
       setComputing false
 
-    console.log('Recompute setup complete, waiting for worker response...')
-
-    // Debugging: Log completion of recompute setup
-    console.log('Recompute setup complete, waiting for worker response...');
-
-  
   createEffect recompute
 
   swapStartGoal := =>

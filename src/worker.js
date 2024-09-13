@@ -15,17 +15,12 @@ onmessage = function (e) {
   ladderSearch.setDict(dictSet); // Assuming `setDict` exists to set the dictionary
 
   let result;
-  if (shortest) {
-    result = ladderSearch.shortestLadder(
-      start,
-      goal,
-    );
-  } else {
+  if (shortest) { 
+    result = ladderSearch.shortestLadder(start,goal)
+  }
+  else { 
     result = ladderSearch.ladderDAG(start, goal);
   }
 
-  postMessage({
-    type: shortest ? "ladder" : "dag",
-    data: result,
-  });
+  return postMessage({type: shortest ? "ladder" : "dag", data: result})
 };
