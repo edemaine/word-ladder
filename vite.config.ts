@@ -36,13 +36,4 @@ export default defineConfig({
   assetsInclude: [
     '**/*.txt'
   ],
-  worker: {
-    format: 'es',
-    plugins: [
-      civetPlugin({
-        ts: 'preserve',
-      }),
-      solidPlugin(),
-    ],
-  },
 });
