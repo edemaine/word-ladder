@@ -1,0 +1,23 @@
+import { LadderSearch } from './ladder.civet'
+
+onmessage = function (e) {
+  const {
+    start,
+    goal,
+    shortest,
+    options,
+    dictSet,
+  } = e.data;
+
+  const ladderSearch = new LadderSearch();
+  ladderSearch.options = options;
+  ladderSearch.setDict dictSet;
+
+  let result;
+  if shortest 
+    result = ladderSearch.shortestLadder start,goal
+  else 
+    result = ladderSearch.ladderDAG start, goal;
+
+  postMessage type: shortest ? "ladder" : "dag", data: result
+};

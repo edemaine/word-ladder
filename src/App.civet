@@ -73,25 +73,47 @@ export function App
     return if search is window.location.search
     history.pushState null, 'ladder', `${window.location.pathname}${search}`
 
+  ladderWorker := new Worker(new URL('./worker.js', import.meta.url), { type: 'module' })
+
+  ladderWorker.onerror = (error) -> 
+    console.error 'Worker encountered an error:', error
+
+  ladderWorker.onmessageerror = (error) ->
+    console.error 'Worker message error:', error
+
   recompute := =>
     s := state.start
     g := state.goal
+    
     unless s
       setLadder null
       setLadderText null
       setDAG null
       return
+
     console.log s, '->', g
     {shortest} := state
     ladderSearch.options = options()
     setComputing true
     setLadderText ''
-    queueMicrotask =>
+
+    message := 
+      start: state.start
+      goal: state.goal
+      shortest: state.shortest
+      options: ladderSearch.options
+      dictSet: ladderSearch.dictSet
+
+    ladderWorker.postMessage message
+
+    ladderWorker.onmessage = (e) ->
+      const { type, data } = e.data
       if shortest
-        setLadder ladderSearch.shortestLadder s, g
+        setLadder data
       else
-        setDAG ladderSearch.ladderDAG s, g
+        setDAG data
       setComputing false
+
   createEffect recompute
 
   swapStartGoal := =>
