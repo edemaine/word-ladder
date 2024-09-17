@@ -74,11 +74,8 @@ export function App
     return if search is window.location.search
     history.pushState null, 'ladder', `${window.location.pathname}${search}`
 
-  // let ladderWorker = new Worker(new URL('./worker.js', import.meta.url), { type: 'module' });
-
   ladderWorker := new Worker(new URL('./worker.js', import.meta.url), { type: 'module' })
 
-  // Optional: Add an error event listener to catch any issues with the worker
   ladderWorker.onerror = (error) -> 
     console.error 'Worker encountered an error:', error
 
