@@ -95,7 +95,7 @@ export function App
       setDAG null
       return
 
-    // console.log s, '->', g
+    console.log s, '->', g
     {shortest} := state
     ladderSearch.options = options()
     setComputing true
@@ -160,7 +160,6 @@ export function App
     .then (response) =>
       response.text() |> await |> ladderSearch.parseDict
       setDictSet ladderSearch.dictSet!
-      console.log("DictSet after fetch: ", ladderSearch.dictSet)
       recompute()
 
   <header>
