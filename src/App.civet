@@ -2,7 +2,6 @@
 {createStore} from 'solid-js/store'
 {type LadderDAG, type LadderOptions, LadderSearch} from './ladder.civet'
 
-
 wordListEcprice from '../data/wordlist.ecprice.txt'
 wordListDwyl from '../data/wordlist.dwyl.txt'
 wordListURL :=
