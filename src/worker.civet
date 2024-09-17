@@ -9,10 +9,9 @@ onmessage = function (e) {
     dictSet,
   } = e.data;
 
-  // Recreate the LadderSearch object in the worker
   const ladderSearch = new LadderSearch();
   ladderSearch.options = options;
-  ladderSearch.setDict dictSet; // Assuming `setDict` exists to set the dictionary
+  ladderSearch.setDict dictSet;
 
   let result;
   if shortest 
