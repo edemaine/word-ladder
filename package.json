@@ -11,8 +11,9 @@
     "test": "vitest",
     "lint": "eslint **/*.civet",
     "deploy": "npm run build && gh-pages -d dist",
-    "prepare": "npm run wordlist",
-    "wordlist": "curl --create-dirs -o data/wordlist.ecprice.txt https://www.mit.edu/~ecprice/wordlist.10000 && curl --create-dirs -o data/wordlist.dwyl.txt https://cdn.jsdelivr.net/gh/dwyl/english-words/words_alpha.txt"
+    "prepare": "npm run wordlist && npm run convert-civet",
+    "wordlist": "curl --create-dirs -o data/wordlist.ecprice.txt https://www.mit.edu/~ecprice/wordlist.10000 && curl --create-dirs -o data/wordlist.dwyl.txt https://cdn.jsdelivr.net/gh/dwyl/english-words/words_alpha.txt",
+    "convert-civet": "civet --js -c src/worker.civet -o src/worker.js && civet --js -c src/ladder.civet -o src/ladder.js"
   },
   "license": "MIT",
   "devDependencies": {
